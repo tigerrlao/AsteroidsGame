@@ -1,15 +1,45 @@
-//your variable declarations here
+SpaceShip ship = new SpaceShip();
 public void setup() 
 {
-  //your code here
+  size(800,800);
 }
 public void draw() 
 {
-  //your code here
+  background(0);
+  ship.show();
 }
-class SpaceShip //extends Floater  
+
+class SpaceShip extends Floater  
 {   
-    //your code here
+  SpaceShip()
+  {
+    corners = 3;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    xCorners[0] = -8;
+    yCorners[0] = -8;
+    xCorners[1] = -8;
+    yCorners[1] = 8;
+    xCorners[2] = 16;
+    yCorners[2] = 0;
+    myCenterX = 400;
+    myCenterY = 400;
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+  
+}
+public void keyPressed()
+{
+  
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -71,8 +101,9 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   }   
   public void show ()  //Draws the floater at the current position  
   {             
-    fill(myColor);   
-    stroke(myColor);    
+    fill(0,0,0);  
+    strokeWeight(3); 
+    stroke(0,255,0);    
     //convert degrees to radians for sin and cos         
     double dRadians = myPointDirection*(Math.PI/180);                 
     int xRotatedTranslated, yRotatedTranslated;    
