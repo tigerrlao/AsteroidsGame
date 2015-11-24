@@ -117,8 +117,8 @@ class Sky
 }
 class SpaceShip extends Floater  
 {   
-  private boolean accelerate;
-  private boolean decelerate;
+  private boolean accelerateS;
+  private boolean decelerateS;
   private boolean spinC;
   private boolean spinCC;
   private boolean brakes;
@@ -152,10 +152,10 @@ class SpaceShip extends Floater
   public double getDirectionY() {return myDirectionY;}
   public void setPointDirection(int degrees) {myPointDirection = degrees;}
   public double getPointDirection() {return myPointDirection;}
-  public void setaccelerate(boolean accel){accelerate = accel;}
-  public void setdecelerate(boolean decel){decelerate = decel;}
-  public boolean getaccelerate(){return accelerate;}
-  public boolean getdecelerate(){return decelerate;}
+  public void setaccelerate(boolean accel){accelerateS = accel;}
+  public void setdecelerate(boolean decel){decelerateS = decel;}
+  public boolean getaccelerate(){return accelerateS;}
+  public boolean getdecelerate(){return decelerateS;}
   public void setspinC(boolean turn){spinC = turn;}
   public void setspinCC(boolean turn){spinCC = turn;}
   public boolean getspinC(){return spinC;}
