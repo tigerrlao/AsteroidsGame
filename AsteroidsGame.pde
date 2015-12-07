@@ -1,6 +1,7 @@
 Sky[] star;
 SpaceShip ship = new SpaceShip();
-Asteroid[] rock;
+ArrayList <Asteroid> rock = new ArrayList <Asteroid>();
+
 boolean start = false;
 int seconds = 0;
 int milliseconds = 0;
@@ -14,10 +15,10 @@ public void setup()
   {
     star[i] = new Sky();
   }
-  rock = new Asteroid[10];
-  for(int j = 0; j < rock.length; j++)
+  
+  for(int j = 0; j < 15; j++)
   {
-    rock[j] = new Asteroid();
+    rock.add(j, new Asteroid());
   }
 }
 
@@ -50,12 +51,18 @@ public void draw()
   {
     ship.show();
     ship.move();
-    for(int j=0;j<rock.length;j++)
+    for(int j=0;j<rock.size();j++)
     {
-    rock[j].show();
-    rock[j].myRotate(rock[j].getaRotate());
-    rock[j].move();
+    rock.get(j).show();
+    rock.get(j).myRotate(rock.get(j).getaRotate());
+    rock.get(j).move();
+    //bug
+    if(dist(ship.getX(),ship.getY(),rock.getX(),rock.getY()) <= 20)
+    {
+      rock.remove(j);
     }
+    }
+
     milliseconds += 1;
     if(milliseconds == 60)
     {
@@ -320,8 +327,8 @@ class Asteroid extends Floater
     xCorners[12] = 5;
     yCorners[12] = -9;
     
-    myCenterX = (int)(Math.random()*800);
-    myCenterY = (int)(Math.random()*800);
+    myCenterX = (int)(Math.random()*750)+25;
+    myCenterY = (int)(Math.random()*750)+25;
     myColor = color(255,0,0);
     myDirectionX = (Math.random()*7)-3;
     myDirectionY = (Math.random()*7)-3;
@@ -361,7 +368,6 @@ class Asteroid extends Floater
   public void move()
   {
     super.move();
-    //rock.myRotate(aRotate);
   }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
