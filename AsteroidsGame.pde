@@ -7,6 +7,7 @@ int seconds = 0;
 int milliseconds = 0;
 int brakeReserve = 3;
 int hyperSpaceR = 3;
+int shipHealth = 0;
 public void setup() 
 {
   size(800,800);
@@ -16,7 +17,7 @@ public void setup()
     star[i] = new Sky();
   }
   
-  for(int j = 0; j < 15; j++)
+  for(int j = 0; j < 50; j++)
   {
     rock.add(j, new Asteroid());
   }
@@ -47,22 +48,26 @@ public void draw()
     text("SPACE for emergency brakes",400,560);
     text("ENTER to start game",400,600);
   }
+
   if(start == true)
   {
     ship.show();
+    if(shipHealth < 170)
     ship.move();
     for(int j=0;j<rock.size();j++)
     {
     rock.get(j).show();
     rock.get(j).myRotate(rock.get(j).getaRotate());
+    if(shipHealth<170)
     rock.get(j).move();
     //bug
-    if(dist(ship.getX(),ship.getY(),rock.getX(),rock.getY()) <= 20)
+    if(dist(ship.getX(),ship.getY(),rock.get(j).getX(),rock.get(j).getY()) <= 20)
     {
       rock.remove(j);
+      shipHealth+=35;
     }
     }
-
+    if(shipHealth<170)
     milliseconds += 1;
     if(milliseconds == 60)
     {
@@ -100,6 +105,15 @@ public void draw()
   text("remaining",250,795);
   text("hyperspace",400,770);
   text("remaining",400,785);
+  text("health",540,780);
+  strokeWeight(0);
+  rect(600,770,(175 - shipHealth),10);
+  if(shipHealth > 170)
+  {
+    textAlign(CENTER);
+    textSize(100);
+    text("GAME OVER",400,400);
+  }
 
 }
 
@@ -177,6 +191,7 @@ class SpaceShip extends Floater
   {
 
     noFill(); 
+    strokeWeight(3);
     stroke(myColor);    
     //convert degrees to radians for sin and cos         
     double dRadians = myPointDirection*(Math.PI/180);                 
