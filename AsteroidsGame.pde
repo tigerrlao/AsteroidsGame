@@ -1,6 +1,7 @@
 Sky[] star;
 SpaceShip ship = new SpaceShip();
 ArrayList <Asteroid> rock = new ArrayList <Asteroid>();
+ArrayList <Bullet> shot = new ArrayList <Bullet>();
 
 boolean start = false;
 int seconds = 0;
@@ -21,6 +22,7 @@ public void setup()
   {
     rock.add(j, new Asteroid());
   }
+  shot.add(new Bullet(ship));
 }
 
 public void draw() 
@@ -52,6 +54,7 @@ public void draw()
   if(start == true)
   {
     ship.show();
+    shot.get(0).show();
     if(shipHealth < 170)
     ship.move();
     for(int j=0;j<rock.size();j++)
@@ -74,6 +77,7 @@ public void draw()
       seconds = seconds + 1;
       milliseconds = 0;
     }
+
   }
   if(ship.getaccelerate()==true)
   {
@@ -287,6 +291,7 @@ public void keyPressed()
     start = true;
   }
 }
+
 public void keyReleased()
 {
   if(key == 'w')
@@ -304,6 +309,63 @@ public void keyReleased()
   if(key == ' ')
   {
     ship.setbrakes(false);
+  }
+}
+
+class Bullet extends Floater
+{
+  public Bullet(SpaceShip ship)
+  {
+    myCenterX = ship.getX();
+    myCenterY = ship.getY();
+
+    corners = 3;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    xCorners[0] = -4;
+    yCorners[0] = -4;
+    xCorners[1] = -4;
+    yCorners[1] = 4;
+    xCorners[2] = 8;
+    yCorners[2] = 0;
+    myColor = color(255,100,0);
+    myPointDirection = ship.getPointDirection();
+    double dRadians =myPointDirection*(Math.PI/180);
+    myDirectionX = 5*Math.cos(dRadians) + ship.getDirectionX();
+    myDirectionY = 5*Math.cos(dRadians) + ship.getDirectionY();
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+  public void show()
+  {
+    noFill(); 
+    strokeWeight(2);
+    stroke(myColor);    
+    //convert degrees to radians for sin and cos         
+    double dRadians = myPointDirection*(Math.PI/180);                 
+    int xRotatedTranslated, yRotatedTranslated;    
+    beginShape();         
+    for(int nI = 0; nI < corners; nI++)    
+    {     
+      //rotate and translate the coordinates of the floater using current direction 
+      xRotatedTranslated = (int)((xCorners[nI]* Math.cos(dRadians)) - (yCorners[nI] * Math.sin(dRadians))+myCenterX);     
+      yRotatedTranslated = (int)((xCorners[nI]* Math.sin(dRadians)) + (yCorners[nI] * Math.cos(dRadians))+myCenterY);      
+      vertex(xRotatedTranslated,yRotatedTranslated);    
+    }   
+    endShape(CLOSE);  
+  }
+  public void move()
+  {
+    myCenterX += myDirectionX;
+    myCenterY += myDirectionY;
   }
 }
 
