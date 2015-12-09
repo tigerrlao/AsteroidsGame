@@ -17,7 +17,7 @@ public void setup()
     star[i] = new Sky();
   }
   
-  for(int j = 0; j < 50; j++)
+  for(int j = 0; j < 20; j++)
   {
     rock.add(j, new Asteroid());
   }
