@@ -9,6 +9,7 @@ int milliseconds = 0;
 int brakeReserve = 3;
 int hyperSpaceR = 3;
 int shipHealth = 0;
+int coolTime = 0;
 public void setup() 
 {
   size(800,800);
@@ -22,12 +23,15 @@ public void setup()
   {
     rock.add(j, new Asteroid());
   }
-  shot.add(new Bullet(ship));
 }
 
 public void draw() 
 {
   background(0);
+  if(coolTime > 0)
+  {
+    coolTime = coolTime - 1;
+  }
   for(int i =0;i<star.length;i++)
   {
     star[i].show();
@@ -54,22 +58,40 @@ public void draw()
   if(start == true)
   {
     ship.show();
-    shot.get(0).show();
+    for(int s=0; s < shot.size(); s++)
+    {
+    shot.get(s).move();
+    shot.get(s).show();
+    }
     if(shipHealth < 170)
     ship.move();
+
     for(int j=0;j<rock.size();j++)
     {
-    rock.get(j).show();
-    rock.get(j).myRotate(rock.get(j).getaRotate());
-    if(shipHealth<170)
-    rock.get(j).move();
-    //bug
-    if(dist(ship.getX(),ship.getY(),rock.get(j).getX(),rock.get(j).getY()) <= 20)
+      rock.get(j).show();
+      rock.get(j).myRotate(rock.get(j).getaRotate());
+      if(shipHealth<170)
+        rock.get(j).move();
+      if(dist(ship.getX(),ship.getY(),rock.get(j).getX(),rock.get(j).getY()) <= 20)
+      {
+        rock.remove(j);
+        shipHealth+=35;
+      }
+    }
+    for(int z = 0;z < shot.size() -1; z++)
     {
-      rock.remove(j);
-      shipHealth+=35;
+      if(shot.get(z).getX() > 800 || shot.get(z).getX() < 0 || shot.get(z).getY() < 0 || shot.get(z).getY() > 800)
+        shot.remove(z);
+      for(int c = 0;c < rock.size() -1;c++)
+      {
+        if(dist(shot.get(z).getX(),shot.get(z).getY(),rock.get(c).getX(),rock.get(c).getY()) <= 20)
+        {
+          shot.remove(z);
+          rock.remove(c);
+        }
+      }
     }
-    }
+    println(shot.size());
     if(shipHealth<170)
     milliseconds += 1;
     if(milliseconds == 60)
@@ -290,6 +312,11 @@ public void keyPressed()
   {
     start = true;
   }
+  if(key == 'j' && coolTime == 0)
+  {
+    coolTime = 10;
+    shot.add(new Bullet(ship));
+  }
 }
 
 public void keyReleased()
@@ -330,9 +357,9 @@ class Bullet extends Floater
     yCorners[2] = 0;
     myColor = color(255,100,0);
     myPointDirection = ship.getPointDirection();
-    double dRadians =myPointDirection*(Math.PI/180);
-    myDirectionX = 5*Math.cos(dRadians) + ship.getDirectionX();
-    myDirectionY = 5*Math.cos(dRadians) + ship.getDirectionY();
+    double nRadians =myPointDirection*(Math.PI/180);
+    myDirectionX = 5*Math.cos(nRadians) + ship.getDirectionX();
+    myDirectionY = 5*Math.sin(nRadians) + ship.getDirectionY();
   }
   public void setX(int x) {myCenterX = x;}
   public int getX() {return (int)myCenterX;}
