@@ -10,6 +10,7 @@ int brakeReserve = 3;
 int hyperSpaceR = 3;
 int shipHealth = 0;
 int coolTime = 0;
+boolean game = true;
 public void setup() 
 {
   size(800,800);
@@ -51,8 +52,9 @@ public void draw()
     text("S to deccelerate",400,440);
     text("A and D to rotate",400,480);
     text("R for hyperspace",400,520);
-    text("SPACE for emergency brakes",400,560);
-    text("ENTER to start game",400,600);
+    text("E for emergency brakes",400,560);
+    text("SPACE to shoot",400,600);
+    text("ENTER to start game",400,640);
   }
 
   if(start == true)
@@ -66,7 +68,7 @@ public void draw()
     if(shipHealth < 170)
     ship.move();
 
-    for(int j=0;j<rock.size();j++)
+    for(int j=0;j<rock.size() ;j++)
     {
       rock.get(j).show();
       rock.get(j).myRotate(rock.get(j).getaRotate());
@@ -78,26 +80,40 @@ public void draw()
         shipHealth+=35;
       }
     }
-    for(int z = 0;z < shot.size() -1; z++)
+    for(int z = 0;z < shot.size() ; z++)
     {
-      if(shot.get(z).getX() > 800 || shot.get(z).getX() < 0 || shot.get(z).getY() < 0 || shot.get(z).getY() > 800)
-        shot.remove(z);
-      for(int c = 0;c < rock.size() -1;c++)
+      for(int c = 0;c < rock.size() ;c++)
       {
         if(dist(shot.get(z).getX(),shot.get(z).getY(),rock.get(c).getX(),rock.get(c).getY()) <= 20)
         {
           shot.remove(z);
           rock.remove(c);
+          break;
         }
       }
     }
-    println(shot.size());
-    if(shipHealth<170)
-    milliseconds += 1;
-    if(milliseconds == 60)
+    if(game == true)
     {
-      seconds = seconds + 1;
-      milliseconds = 0;
+      if(shipHealth<170)
+      milliseconds += 1;
+      if(milliseconds == 60)
+      {
+        seconds = seconds + 1;
+        milliseconds = 0;
+      }
+    }
+    if(shipHealth > 170)
+    {
+      textAlign(CENTER);
+      textSize(100);
+      text("GAME OVER",400,400);
+    }
+    if(rock.size() == 0)
+    {
+      textAlign(CENTER);
+      textSize(100);
+      text("You Win!",400,400);
+      game = false;
     }
 
   }
@@ -134,12 +150,6 @@ public void draw()
   text("health",540,780);
   strokeWeight(0);
   rect(600,770,(175 - shipHealth),10);
-  if(shipHealth > 170)
-  {
-    textAlign(CENTER);
-    textSize(100);
-    text("GAME OVER",400,400);
-  }
 
 }
 
@@ -148,7 +158,7 @@ class Sky
   private int myX,myY;
   public Sky()
   {
-    myX = (int)(Math.random()*750);
+    myX = (int)(Math.random()*800);
     myY = (int)(Math.random()*750);
   }
   public void setmyX(int x){myX = x;}
@@ -287,7 +297,7 @@ public void keyPressed()
   }
   if(key == 'a'){ship.setspinCC(true);}
   if(key == 'd'){ship.setspinC(true);}
-  if(key == ' ')
+  if(key == 'e')
   {
     if(brakeReserve > 0)
     {
@@ -312,10 +322,28 @@ public void keyPressed()
   {
     start = true;
   }
-  if(key == 'j' && coolTime == 0)
+  if(key == ' ' && coolTime == 0)
   {
     coolTime = 10;
     shot.add(new Bullet(ship));
+  }
+  if(key == 'p')
+  {
+    start = false;
+    ship.setX(400);
+    ship.setY(400);
+    for(int j = 0; j < 20; j++)
+    {
+      rock.add(j, new Asteroid());
+    }
+    for(int s=0; s < shot.size(); s++)
+      shot.remove(s);
+    for(int c = 0;c < rock.size() ;c++)
+      rock.remove(c);
+    milliseconds = 0;
+    seconds = 0;
+    shipHealth = 0;
+    ship.setbrakes(true);
   }
 }
 
@@ -333,7 +361,11 @@ public void keyReleased()
   }
   if(key == 'a'){ship.setspinCC(false);}
   if(key == 'd'){ship.setspinC(false);}
-  if(key == ' ')
+  if(key == 'e')
+  {
+    ship.setbrakes(false);
+  }
+  if(key == 'p')
   {
     ship.setbrakes(false);
   }
@@ -434,8 +466,8 @@ class Asteroid extends Floater
     myCenterX = (int)(Math.random()*750)+25;
     myCenterY = (int)(Math.random()*750)+25;
     myColor = color(255,0,0);
-    myDirectionX = (Math.random()*7)-3;
-    myDirectionY = (Math.random()*7)-3;
+    myDirectionX = (Math.random()*5)-2;
+    myDirectionY = (Math.random()*5)-2;
     myPointDirection = (int)(Math.random()*360);
     aRotate = (int)((Math.random()*10)-5);
   }
