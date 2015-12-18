@@ -344,6 +344,8 @@ public void keyPressed()
     seconds = 0;
     shipHealth = 0;
     ship.setbrakes(true);
+    brakeReserve = 3;
+    hyperspaceR = 3;
   }
 }
 
