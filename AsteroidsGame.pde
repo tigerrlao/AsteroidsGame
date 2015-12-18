@@ -321,6 +321,7 @@ public void keyPressed()
   if(key == ENTER)
   {
     start = true;
+    game = true;
   }
   if(key == ' ' && coolTime == 0)
   {
@@ -332,7 +333,7 @@ public void keyPressed()
     start = false;
     ship.setX(400);
     ship.setY(400);
-    for(int j = 0; j < 20; j++)
+    for(int j = 0; j < 25; j++)
     {
       rock.add(j, new Asteroid());
     }
